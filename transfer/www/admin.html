@@ -1,0 +1,23 @@
+<DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/admin.css">
+</head>
+
+<body>
+<script src="js/admin.js"></script>
+<form>
+    <div class="logo">
+      <a href="#"><img src="/img/logo.png" alt="Puzzle Lock"></a>
+    </div>
+    <input id="text_in" type="text" placeholder="SELECT datname FROM pg_database" required>    
+    <button id="sub_btn" type="button">Go</button>
+    <span id="help_prompt" class="helper">
+        <a href="#">Having trouble admin-ing?</a>
+    </span>
+      <div class="divider"><hr class="left"/> or <hr class="right" /></div>
+    <button id="reg_btn" type="button" class="otheradminbtn">Eject</button>
+</form>
+<div id="debug"></div>
+</body>
+</html>

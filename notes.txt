@@ -1,0 +1,15 @@
+>>> import hashlib
+>>> m = hashlib.md5()
+>>> hashlib.sha224('Admin X 5 = AdminAdminAdminAdminAdmin').hexdigest()
+'60b4e74529f66dfe407b71c4bc37ef8b74d694d38c5b6b68345fa567'
+>>> hashlib.sha224('I <3 Alice').hexdigest()
+'bb07dbb722e0c8a9184bed2f355fa815dd42eed6abc0ebeeeb8ac0eb'
+>>> hashlib.sha224('IH8Bob').hexdigest()
+'4b517d2468714d71278bbc8323fdd62f835a989cc97a5fb345c51bf4'
+>>> hashlib.sha224('1').hexdigest()
+'e25388fde8290dc286a6164fa2d97e551b53498dcbf7bc378eb1f178'
+>>> hashlib.sha224('2').hexdigest()
+'58b2aaa0bfae7acc021b3260e941117b529b2e69de878fd7d45c61a9'
+>>> hashlib.sha224('3').hexdigest()
+'4cfc3a1811fe40afa401b25ef7fa0379f1f7c1930a04f8755d678474'
+>>>

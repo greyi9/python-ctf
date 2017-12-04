@@ -1,0 +1,91 @@
+
+form {
+    margin: auto;
+    border: 3px solid #f1f1f1;
+    padding: 16px;
+    max-width: 400px;
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+
+input:invalid {
+    box-shadow:none;
+}
+
+button {
+    background-color: #666fb1;
+    color: white;
+    font-size: 14px;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 8px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.registerbtn {
+    color: Black;
+    background-color: #bcbfe2;
+}
+
+.logo {
+    text-align: center;
+    margin: 24px 0 12px 0;
+}
+
+span.helper {
+    float: none;
+    display: block;
+    padding-top: 12px;
+    text-align: center;
+}
+
+span.or {
+    float: none;
+    display: block;
+    padding-top: 10px;
+    font: 12px arial, sans-serif;
+    text-align: center;
+    color: #b1c1f1
+}
+
+.divider {
+    float: none;
+    display: block;
+    padding-top: 10px;
+    font: 12px arial, sans-serif;
+    text-align: center;
+    color: #b1c1f1;
+    text-align:center;
+}
+
+.divider hr {
+	margin-left:auto;
+	margin-right:auto;
+	width:42%;
+
+}
+
+.left {
+	float:left;
+}
+
+.right {
+	float:right;
+}
+
