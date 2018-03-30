@@ -15,11 +15,6 @@ for n in os.listdir(dir_path + "/" + "lib"):
         modules.append(imp.load_source(n, dir_path + "/" + "lib" + "/" + n))
 
 
-def get_lib_func_output(input):
-    for m in modules:
-         if 'libliblib' in str(m):      
-             return m.func(input)
-
 def do_auth_tests():
     for m in modules:
          if 'auth' in str(m):      
@@ -115,7 +110,7 @@ def get_admin_template():
     <div class="logo">
     <a href="#"><img src="/img/logo.png" alt="Puzzle Lock"></a>
     </div>
-    <input id="text_in" type="text" placeholder="SELECT datname FROM pg_database" required>
+    <input id="text_in" type="text" placeholder="Authorized use only!" required>
     <button id="sub_btn" type="button">Go</button>
     <span id="help_prompt" class="helper" hidden>
     </span>

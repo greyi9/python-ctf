@@ -1,6 +1,3 @@
-
-
-//-----------------
 var debug_print = 'init' 
 var debugging = window.location.hash.substr(1);
 
@@ -14,28 +11,20 @@ function FUNC() {
     callAjaxMainForm("admin",test_response);
 }
 
-function FUNC2() {
-    callAjax("admin",test_response);
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     debug_print = document.getElementById("debug");
     if (debugging == 'debug'){
         debug_print.innerHTML = "<h1>Debugging...</h1>";
     }
 }, false);
-//-----------------   
 
 var sub_btn;
-var reg_btn;
 var text_in;
 
 document.addEventListener('DOMContentLoaded', function() {
     sub_btn = document.getElementById("sub_btn");
-    reg_btn = document.getElementById("reg_btn");
     text_in = document.getElementById("text_in");
     sub_btn.addEventListener("click", FUNC, false);
-    reg_btn.addEventListener("click", FUNC2, false);
 }, false);
 
 
