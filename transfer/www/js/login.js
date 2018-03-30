@@ -7,7 +7,6 @@ function test_response(response) {
     if (debugging == 'debug') {
         debug_print.innerHTML = '<pre>' + response + '</pre>';
     }
-    updateStateWithResponse(response);
 }
 
 function FUNC() {
@@ -58,7 +57,8 @@ function callAjax(url, callback){
     xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function(){
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
-            updateState('done_waiting')
+            text_in.value = "";
+            document.body.style.cursor = 'default';
             callback(xmlhttp.responseText);
         }
 }
@@ -75,70 +75,18 @@ function callAjaxMainForm(url, callback){
         }
     }
     if (STATE == 'loaded') {
-        updateState('uname_submitted');
+        sub_btn.innerHTML = "Next";
+        reg_btn.innerHTML = "Register";
+        text_in.value = "";
+        text_in.placeholder = "Username";
+        text_in.type = "text";
     } else if (STATE == 'uname_submitted') {
-        updateState('passwd_submitted'); 
+        sub_btn.innerHTML = "Authenticating...";
     }
-    updateState('waiting');
+    document.body.style.cursor = 'progress';
     xmlhttp.open("POST", "login", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     var requestbody_json = '{"rb":[{"state":"' + STATE + '"},{"input":"' + text_in.value + '"}]}';
     xmlhttp.send(requestbody_json);
 }
 
-function updateState(new_state) {
-    var debug = STATE;
-    if (new_state == 'loaded') {
-        sub_btn.innerHTML = "Next";
-        reg_btn.innerHTML = "Register";
-        text_in.value = "";
-        text_in.placeholder = "Username";
-        text_in.type = "text";
-    } else if (new_state == 'uname_submitted') {
-        STATE = 'uname_submitted';
-        sub_btn.innerHTML = "Login";
-        text_in.placeholder = "Password";
-        text_in.type = "password";
-    } else if (new_state == 'passwd_submitted') {
-        sub_btn.innerHTML = "Authenticating...";
-    } else if (new_state == 'waiting') {
-        var old_state = STATE;
-        document.body.style.cursor = 'progress';
-        new_state = new_state + ":" + old_state;
-    } else if (new_state == 'done_waiting') {
-        text_in.value = "";
-        document.body.style.cursor = 'default';
-        new_state = STATE.split(':').pop()
-    } else if (new_state == 'uname_failed') {
-        dalert("Oops. Unknown Username!");
-    } else if (new_state == 'passwd_failed') {
-        dalert("Oops. Wrong Password! ");
-    } else if (new_state == 'logged_in') {
-        dalert("Congrats, you've authenticated! Not implemented yet though.");
-    } else if (new_state == 'unexpected') {
-        dalert("Oops. Maybe try again in a new browser? ");
-    }
-    STATE = new_state;
-    debug += " ---> " 
-    debug += STATE
-    dalert(debug);
-    if (['uname_failed','passwd_failed','logged_in'].indexOf(STATE) !== -1) {
-        updateState('loaded');
-    }
-}
-
-
-function updateStateWithResponse(response) {
-    updateState('done_waiting');
-    if (response.indexOf('Valid') !== -1 ) {
-        if (STATE == 'passwd_submitted') {
-            updateState('logged_in');
-        } 
-    } else if (response.indexOf('Unknown') !== -1 ) {
-        if (STATE == 'passwd_submitted') {
-            updateState('passwd_failed');
-        } else {
-            updateState('uname_failed');
-        }
-    }
-}
