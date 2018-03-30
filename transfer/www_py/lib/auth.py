@@ -6,12 +6,15 @@ import os
 import psycopg2
 
 def test1():
+    print "query('SELECT * FROM PUZZLES')" 
     print query("SELECT * FROM PUZZLES")
 
 def test2():
+    print "generate_new_session_token()"
     print generate_new_session_token()
 
 def test3():
+    print "is_session_token_in_db('abcdefg')"
     print is_session_token_in_db('abcdefg')
 
 def test4():
