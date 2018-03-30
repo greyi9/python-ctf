@@ -4,14 +4,23 @@ import socket
 import threading
 import os
 import psycopg2
-import www_py.login
-import www_py.template
-import www_py.lib.auth
-import www_py.admin
 
 L_PORT= 8000
 PY_DIR = 'www_py'
 ROUTE_DIR = 'www'
+
+import imp
+def import_modules_in(imp_path):
+    m = []
+    names = os.listdir(imp_path)
+    print os.path.splitext(imp_path + "/login.py")
+    for name in names:
+        extension = os.path.splitext(imp_path + "/" + name)[1]
+        if (extension == ".py" and 'init' not in name):  
+            m.append(imp.load_source(name, imp_path + "/" + name))
+    return m
+modules = import_modules_in(PY_DIR)
+
 
 
 
@@ -81,19 +90,18 @@ class Server:
 def handle_pyfile(file_requested, method, input):
     m = get_requested_module(file_requested)
     try:
-        if "admin" in m:
-            return www_py.admin.process_request(method, input)
-        elif "login" in m:
-            return www_py.login.process_request(method, input)
-        else:
-            return "<h1>Not Implemented</h1>"
+        return m.process_request(method, input)
     except Exception as e:
         return e
 
 def get_requested_module(file_requested):
     f = file_requested.split('/').pop().split('.')[0]
-    ff = PY_DIR + "." + f
-    return ff
+    ff = PY_DIR + "/" + f
+    requested_module_py = '<module \'%s.py\' from \'%s\'>' % (f,ff + ".py")
+    requested_module_pyc = '<module \'%s.py\' from \'%s\'>' % (f,ff + ".pyc")
+    for m in modules:
+        if (requested_module_py == str(m) or requested_module_pyc == str(m)):
+            return m
 
 
 def get_params(r, rm):

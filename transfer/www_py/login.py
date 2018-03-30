@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import lib.auth
+import json
 
 VERBS_ACCEPTED = ['GET','POST']
 
@@ -38,8 +40,12 @@ def do_post(input):
     h += 'Content-Type: application/json;' 
     h += 'Connection: close\n\n'
     rb = "Unknown"
-    if ('Bob' in input):
-        rb = "Valid"
+    try:
+        rb = json.dumps(input)
+        j = json.loads(rb)
+        print j
+    except Exception as e:
+        rb = "Oops: " + e
     return h  + rb
 
 

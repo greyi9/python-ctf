@@ -4,30 +4,29 @@ import sys
 import imp
 import os
 import psycopg2
+import lib.auth
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 cwd = os.getcwd()
 
+"""
 modules = []
 for n in os.listdir(dir_path + "/" + "lib"):
     extension = n.split('.').pop()
     if (extension == "py" and 'init' not in n):
         modules.append(imp.load_source(n, dir_path + "/" + "lib" + "/" + n))
-
+"""
 
 def do_auth_tests():
-    for m in modules:
-         if 'auth' in str(m):      
-             print "[**TEST1**] \n"
-             m.test1()
-             print "[**TEST2**] \n"
-             m.test2()
-             print "[**TEST3**] \n"
-             m.test3()
-             print "[**TEST4**] \n"
-             m.test4()
+    print "[**TEST1**] \n"
+    lib.auth.test1()
+    print "[**TEST2**] \n"
+    lib.auth.test2()
+    print "[**TEST3**] \n"
+    lib.auth.test3()
+    print "[**TEST4**] \n"
+    lib.auth.test4()
    
-do_auth_tests()
 
 
 
@@ -80,6 +79,8 @@ def do_post(input):
                                    host='localhost' \
                                    password='docker'")
         if DBconn is not None:
+            print "running tests before DBconn.close()\n"
+            do_auth_tests()
             DBconn.autocommit = True
             cur = DBconn.cursor()
             cur.execute(q)
@@ -90,6 +91,8 @@ def do_post(input):
                 rb += str(row) + "<br>\n"
             cur.close()
             DBconn.close()
+            print "running tests after DBconn.close()\n"
+            do_auth_tests()
         else:
             rb = "DB Connection is None"
     except Exception as e:

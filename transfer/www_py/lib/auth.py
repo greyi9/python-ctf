@@ -72,5 +72,15 @@ def check_session(session_token):
     debug = query(SQL,data)
     print debug
 
+def check_username_exists(user_name):
+    SQL = "SELECT COUNT(*) FROM USERS WHERE NAME=(%s)"
+    data = user_name
+    debug = query(SQL,data)
+    return debug
+
+def check_hash_match(user_name,hashofsecret):
+    SQL = "SELECT USER_ID FROM USERS WHERE NAME=(%s) AND PW_HASH=(%s)"
+    debug = query(SQL,user_name,hashofsecret)
+    return debug
 
 

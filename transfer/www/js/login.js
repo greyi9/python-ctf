@@ -61,7 +61,7 @@ function callAjax(url, callback){
             updateState('done_waiting')
             callback(xmlhttp.responseText);
         }
-    }
+}
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
 }
@@ -82,7 +82,8 @@ function callAjaxMainForm(url, callback){
     updateState('waiting');
     xmlhttp.open("POST", "login", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("input="+text_in.value);
+    var requestbody_json = '{"rb":[{"state":"' + STATE + '"},{"input":"' + text_in.value + '"}]}';
+    xmlhttp.send(requestbody_json);
 }
 
 function updateState(new_state) {

@@ -14,8 +14,4 @@ for n in os.listdir(dir_path + "/" + "lib"):
         modules.append(imp.load_source(n, dir_path + "/" + "lib" + "/" + n))
 
 
-def get_lib_func_output(input):
-    for m in modules:
-         if 'libliblib' in str(m):      
-             return m.func(input)
    
