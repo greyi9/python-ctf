@@ -53,14 +53,14 @@ def do_post(input):
 def get_login_template():
     return """
     <DOCTYPE html>
-    <html><head><link rel="stylesheet" type="text/css" href="css/login.css"></head>
+    <html><head><link rel="stylesheet" type="text/css" href="css/default.css"></head>
     <body><script src="js/login.js"></script>
-    <form><div class="logo"><a href="#"><img src="/img/logo.png" alt="Puzzle Lock"></a></div>
-    <input id="text_in" type="text" placeholder="Username" required>
-    <button id="sub_btn" type="button">Next</button>
-    <span id="help_prompt" class="helper"><a href="#">Having trouble logging in?</a>
-    </span><div class="divider"><hr class="left"/> or <hr class="right" /></div>
-    <button id="reg_btn" type="button" class="registerbtn">Register</button>
+    <form><div class="logo"><a href="#"><img src="/img/logo.png" alt="logo"></a></div>
+    <input id="text_in" type="text" placeholder="" required>
+    <button id="btn1" type="button"></button>
+    <span id="help_prompt" class="helper"></span>
+    <div class="divider"><hr class="left"/> or <hr class="right" /></div>
+    <button id="btn2" type="button" class="secondarybutton"></button>
     </form><div id="debug" hidden></div></body></html>
     """
  
