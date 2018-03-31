@@ -259,8 +259,10 @@ def handle_rqst(client_socket):
         response = 'HTTP/1.1 403 Forbidden\n'
     else:
         response = 'HTTP/1.1 405 Method Not Allowed\n'
-    print str(response)
-    client_socket.send(str(response))
+    response = str(response)
+    if len(response.split('\n')) < 3:
+        print response
+    client_socket.send(response)
     client_socket.close()
 
 
