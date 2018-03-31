@@ -34,7 +34,7 @@ function callAjaxMainForm(url, callback){
         }
     }
     primary_btn.style.cursor = 'progress';
-    xmlhttp.open("POST", "login", true);
+    xmlhttp.open("POST", url, true);
     xmlhttp.setRequestHeader("Content-type", "application/json");
     var requestbody_json = '{"input":"' + encodeURIComponent(text_in.value) + '"}';
     xmlhttp.send(requestbody_json);

@@ -1,44 +1,27 @@
-var debug_print = 'init' 
-var debugging = window.location.hash.substr(1);
 
-function test_response(response) {
-    if (debugging == 'debug'){
-        debug_print.innerHTML = '<pre>' + response + '</pre>';
-    }
-}
-
-function FUNC() {
-    callAjaxMainForm("admin",test_response);
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    debug_print = document.getElementById("debug");
-    if (debugging == 'debug'){
-        debug_print.innerHTML = "<h1>Debugging...</h1>";
-    }
-}, false);
-
-var sub_btn;
+var mode = window.location.hash.substr(1);
+var debug_print;
+var primary_btn;
+var secondary_btn;
 var text_in;
 
-document.addEventListener('DOMContentLoaded', function() {
-    sub_btn = document.getElementById("sub_btn");
-    text_in = document.getElementById("text_in");
-    sub_btn.addEventListener("click", FUNC, false);
-}, false);
-
+function dalert(input) {
+    if (mode == 'debug') {
+        alert(input);
+    }
+}
 
 function callAjax(url, callback){
     var xmlhttp;
     xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function(){
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
-            updateState('done_waiting')
+            primary_btn.style.cursor = 'pointer';
             callback(xmlhttp.responseText);
         }
     }
     xmlhttp.open("GET", url, true);
-    xmlhttp.send(text_in.value);
+    xmlhttp.send();
 }
 
 function callAjaxMainForm(url, callback){
@@ -46,11 +29,43 @@ function callAjaxMainForm(url, callback){
     xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function(){
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
-            callback(xmlhttp.responseText);
+            primary_btn.style.cursor = 'pointer';
+       	    callback(xmlhttp.responseText);
         }
     }
-    xmlhttp.open("POST", "admin", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send(text_in.value);
+    primary_btn.style.cursor = 'progress';
+    xmlhttp.open("POST", url, true);
+    xmlhttp.setRequestHeader("Content-type", "application/json");
+    var requestbody_json = '{"input":"' + encodeURIComponent(text_in.value) + '"}';
+    xmlhttp.send(requestbody_json);
 }
+
+function update_stuff() {
+    primary_btn.innerHTML = "Submit";
+    text_in.value = "";
+    text_in.placeholder = "Input";
+    text_in.type = "text";
+}
+
+function test_response(response) {
+    if (mode == 'debug') {
+        debug_print.innerHTML = '<pre>' + response + '</pre>';
+    }
+}
+
+function btn1_click_handler() {
+    callAjaxMainForm("admin",test_response);
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    debug_print = document.getElementById("debug"); 
+    if (mode == 'debug') {
+        debug_print.innerHTML = "<h1>Debugging Started...</h1>";
+    }
+    primary_btn = document.getElementById("btn1");
+    text_in = document.getElementById("text_in");
+    primary_btn.addEventListener("click", btn1_click_handler, false);
+}, false);
+
 

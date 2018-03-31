@@ -42,6 +42,28 @@ def query(SQL,data=None):
         print "[**debug**] Oops: %s\n" % e
     return []
 
+def process_cookies(cookies):
+    print "lib.auth.process_cookies not yet implemented"
+    print "printing cookies to be processed, then returning arbitrary auth_data"
+    for cookie in cookies:
+        print cookie.split('=')
+    return {"id":0,"cookie_update":[["temp_cookie","12345",0,0,"/login"],["other_cookie","axaxaxa",1,0,"/admin"]]}
+
+def set_cookie_headers(auth_data):
+     h = ''
+     if auth_data==None:
+         h += 'Set-Cookie: other_cookie=""; HttpOnly; Path=/admin;\n'
+     else:
+         for cookie_update in auth_data["cookie_update"]:
+             h += 'Set-Cookie: ' + cookie_update[0] + "=" + cookie_update[1] + "; "
+             if cookie_update[2]:
+                 h += 'HttpOnly; '
+             if cookie_update[3]:
+                 h += 'Secure; '
+             if cookie_update[4]:
+                 h += 'Path=' + cookie_update[4] + ";"
+             h += '\n'
+     return h
 
 def is_session_token_in_db(token):
     SQL = "SELECT COUNT(*) FROM SESSIONS WHERE TOKEN=(%s)"

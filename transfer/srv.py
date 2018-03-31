@@ -48,21 +48,23 @@ class Server:
      except Exception as e:
          print ""
 
- def _get_headers(self, code, fr=None):
+ def _get_headers(self, code, fr=None, auth_data=None):
      h = 'HTTP/1.1 404 Not Found\n'
      if (code == 200):
          h = 'HTTP/1.1 200 OK\n'
          if ('img/' in fr):
              if ('.gif' in fr):
-                 h += 'Content-Type: image/gif;'
+                 h += 'Content-Type: image/gif;\n'
              elif ('.png' in fr):
-                 h += 'Content-Type: image/png;'
+                 h += 'Content-Type: image/png;\n'
          elif ('css/' in fr):
-             h += 'Content-Type: text/css; charset=utf-8'
+             h += 'Content-Type: text/css; charset=utf-8\n'
          elif ('js/' in fr):
-             h += 'Content-Type: text/plain; charset=utf-8'
+             h += 'Content-Type: text/plain; charset=utf-8\n'
          else:        
-             h += 'Content-Type: text/html; charset=utf-8'
+             h += 'Content-Type: text/html; charset=utf-8\n'
+     if auth_data:
+         h += www_py.lib.auth.set_cookie_headers(auth_data)
      h += 'Connection: close\n\n' 
      return h
 
@@ -78,17 +80,17 @@ class Server:
     
     
     
-def handle_pyfile(file_requested, method, input):
+def handle_pyfile(file_requested, method, usrinput, auth_data):
     m = get_requested_module(file_requested)
     try:
         if "admin" in m:
-            return www_py.admin.process_request(method, input)
+            return www_py.admin.process_request(method, usrinput, auth_data)
         elif "login" in m:
-            return www_py.login.process_request(method, input)
+            return www_py.login.process_request(method, usrinput, auth_data)
         else:
             return "<h1>Not Implemented</h1>"
     except Exception as e:
-        return e
+        return str(e)
 
 def get_requested_module(file_requested):
     f = file_requested.split('/').pop().split('.')[0]
@@ -170,13 +172,30 @@ def handle_rqst(client_socket):
         print "[*] Client forgot to send a verb or path in the request...\n"
         client_socket.close()
         return
+    auth_data = None
+    cookies = None
+    try:
+        cookies = [line for line in decoded_data.split('\n') if line.startswith('Cookie:')]
+        if cookies:
+            cookies = cookies[0].split(':',1)[1]
+            if cookies:
+                cookies = cookies.split(';')
+    except Exception as e:
+        print "[*] cookie processing exception: " + str(e) + "\n"
+    if cookies:
+        auth_data = www_py.lib.auth.process_cookies(cookies)
+    else:
+        print "[*] no cookies"
     params = get_params(decoded_data, request_method)
     print "[*] Requested File:  %s" % file_requested
-    print "[*] With Parameters: %s\n" % params
+    if params:
+        print "[*] Parameters: %s\n" % params
+    else:
+        print "[*] no params"
     if (file_requested == '/'): 
         file_requested = '/index.html'
     file_requested = ROUTE_DIR + file_requested
-    response_headers = s._get_headers( 200, file_requested)    
+    response_headers = s._get_headers( 200, file_requested, auth_data)    
     response =  response_headers.encode() 
 
     if (request_method in ['HEAD','GET','POST','OPTIONS','PUT','DELETE','PATCH']):
@@ -184,7 +203,7 @@ def handle_rqst(client_socket):
             file_requested_type = get_requested_file_type(file_requested)
             if (request_method in ['HEAD','GET','POST','OPTIONS']):
                 if (file_requested_type == 'Python'):
-                    response = handle_pyfile(file_requested, request_method, params)
+                    response = handle_pyfile(file_requested, request_method, params, auth_data)
                 elif (request_method == 'OPTIONS'):
                     response = get_headers_with_options(file_requested)
                 elif (file_requested_type == 'Static'):
@@ -197,7 +216,7 @@ def handle_rqst(client_socket):
             else:
                 if (request_method == 'PATCH'):
                     if (file_requested_type == 'Python'):
-                        response = handle_pyfile(file_requested, request_method, params)
+                        response = handle_pyfile(file_requested, request_method, params, auth_data)
                     elif (file_requested_type == 'Static'):
                         with open(file_requested,'a') as f:
                             f.write(params)
@@ -231,7 +250,7 @@ def handle_rqst(client_socket):
                         response = s._get_headers( 404)
                         response += 'DELETE failed\n' 
         except Exception as e:
-            print e
+            print str(e)
             response = s._get_headers( 404)
             response += '<pre>' + str(e) + '</pre>\n'
     elif (request_method == 'TRACE'):
@@ -240,7 +259,6 @@ def handle_rqst(client_socket):
         response = 'HTTP/1.1 403 Forbidden\n'
     else:
         response = 'HTTP/1.1 405 Method Not Allowed\n'
-
     client_socket.send(str(response))
     client_socket.close()
 

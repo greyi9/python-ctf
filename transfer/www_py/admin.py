@@ -33,16 +33,16 @@ def do_auth_tests():
 
 VERBS_ACCEPTED = ['GET','POST']
 
-def process_request(method, input):
+def process_request(method, input, auth_data):
     r = 'HTTP/1.1 404 Not Found\n'
     r += 'Connection: close\n\n'
     if (method in VERBS_ACCEPTED):
         if method == 'GET':
-            r = do_get(input)
+            r = do_get(input, auth_data)
         elif method == 'HEAD':
             r = do_head(input)
         elif method == 'POST':
-            r = do_post(input)
+            r = do_post(input, auth_data)
         elif method == 'PUT':
             r = do_put(input)
         elif method == 'PATCH':
@@ -57,18 +57,20 @@ def process_request(method, input):
         r = lib_headers.get_response_by_code(405)    
     return r
 
-def do_get(input):
+def do_get(input, auth_data):
     rb = get_admin_template()
     h = 'HTTP/1.1 200 OK\n' 
-    h += 'Content-Type: text/html; charset=utf-8'
+    h += 'Content-Type: text/html; charset=utf-8\n'
+    h += lib.auth.set_cookie_headers(auth_data)
     h += 'Connection: close\n\n'
     return h + rb
 
-def do_post(input):
+def do_post(input, auth_data):
     h = 'HTTP/1.1 200 OK\n'
-    h += 'Content-Type: text/html; charset=utf-8' 
+    h += 'Content-Type: text/html; charset=utf-8\n'
+    h += lib.auth.set_cookie_headers(auth_data)
     h += 'Connection: close\n\n'
-    rb = "Setup Succeeded\n"
+    rb = "This action has been logged\n"
      
     q = "%s" % input
     
@@ -102,25 +104,13 @@ def do_post(input):
 
 def get_admin_template():
     return """
-    <html>
-    <head>
-    <link rel="stylesheet" type="text/css" href="css/admin.css">
-    </head>
-
-    <body>
-    <script src="js/admin.js"></script>
-    <form>
-    <div class="logo">
-    <a href="#"><img src="/img/logo.png" alt="Puzzle Lock"></a>
-    </div>
-    <input id="text_in" type="text" placeholder="Authorized use only!" required>
-    <button id="sub_btn" type="button">Go</button>
-    <span id="help_prompt" class="helper" hidden>
-    </span>
-    </form>
-    <div id="debug" hidden></div>
-    </body>
-    </html>
+    <html><head><link rel="stylesheet" type="text/css" href="css/default.css"></head>
+    <body><script src="js/admin.js"></script><form>
+    <div class="logo"><a href="#"><img src="/img/logo.png" alt="logo"></a></div>
+    <input id="text_in" type="text" placeholder="Authorized use only" required>
+    <button id="btn1" type="button">Go</button>
+    <span id="help_prompt" class="helper" hidden></span>
+    </form><div id="debug" hidden></div></body></html>
     """
 
 
