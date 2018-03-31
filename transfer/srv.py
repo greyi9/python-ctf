@@ -90,7 +90,7 @@ def handle_pyfile(file_requested, method, usrinput, auth_data):
         else:
             return "<h1>Not Implemented</h1>"
     except Exception as e:
-        return str(e)
+        print str(e)
 
 def get_requested_module(file_requested):
     f = file_requested.split('/').pop().split('.')[0]
@@ -145,7 +145,7 @@ def handle_rqst(client_socket):
     try:
         data = client_socket.recv(1024)
     except Exception as e:
-        print "[*] Hmm: %s" % e
+        print "[*] Hmm: %s" % str(e)
         client_socket.close()
         return 
     if data is None:
@@ -259,6 +259,7 @@ def handle_rqst(client_socket):
         response = 'HTTP/1.1 403 Forbidden\n'
     else:
         response = 'HTTP/1.1 405 Method Not Allowed\n'
+    print str(response)
     client_socket.send(str(response))
     client_socket.close()
 
