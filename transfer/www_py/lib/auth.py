@@ -140,7 +140,10 @@ def check_session(session_token):
 def get_id_from_username(user_name):
     SQL = "SELECT ID FROM USERS WHERE NAME=(%s)"
     data = user_name
+    print "[*] debugging... user_name: " + data
+    print "[*] debugging... SQL: " + SQL
     debug = query(SQL,data)
+    print "[*] debugging... query result: " + debug
     return debug
 
 def check_username_exists(user_name):
