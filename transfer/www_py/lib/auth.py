@@ -5,6 +5,7 @@ import imp
 import os
 import psycopg2
 import base64
+import dao
 
 def test1():
     print "query('SELECT * FROM PUZZLES')" 
@@ -24,21 +25,7 @@ def test4():
 
 def query(SQL,data=None):
     try:
-        DBconn = psycopg2.connect("dbname='docker' user='docker' password='docker' host='localhost'")
-        if DBconn is not None and SQL is not None:
-            DBconn.autocommit = True
-            cur = DBconn.cursor()
-            if data is not None:
-                cur.execute(SQL,data)
-            else:
-                cur.execute(SQL)
-            rows = cur.fetchall()
-            print "[**debug**] Query Result: \n %s \n" % str(rows)
-            cur.close
-            DBconn.close
-            return rows
-        else:
-            print "[**debug**] DB Connection is None"
+        return dao.query(SQL, data)
     except Exception as e:
         print "[**debug**] Oops: %s\n" % str(e)
     return []

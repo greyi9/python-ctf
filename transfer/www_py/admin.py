@@ -5,17 +5,11 @@ import imp
 import os
 import psycopg2
 import lib.auth
+import json
+import urllib
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 cwd = os.getcwd()
-
-"""
-modules = []
-for n in os.listdir(dir_path + "/" + "lib"):
-    extension = n.split('.').pop()
-    if (extension == "py" and 'init' not in n):
-        modules.append(imp.load_source(n, dir_path + "/" + "lib" + "/" + n))
-"""
 
 def do_auth_tests():
     print "[**TEST1**] \n"
@@ -61,42 +55,24 @@ def do_get(input, auth_data):
     rb = get_admin_template()
     h = 'HTTP/1.1 200 OK\n' 
     h += 'Content-Type: text/html; charset=utf-8\n'
-    h += lib.auth.set_cookie_headers(auth_data)
+    h += str(lib.auth.set_cookie_headers(auth_data))
     h += 'Connection: close\n\n'
     return h + rb
 
 def do_post(input, auth_data):
     h = 'HTTP/1.1 200 OK\n'
     h += 'Content-Type: text/html; charset=utf-8\n'
-    h += lib.auth.set_cookie_headers(auth_data)
+    h += str(lib.auth.set_cookie_headers(auth_data))
     h += 'Connection: close\n\n'
     rb = "This action has been logged\n"
-     
+    j = json.loads(input)["input"]
+    input = urllib.unquote( j ).decode( 'utf8' )
     q = "%s" % input
     
     DBconn = None
     try:
-        DBconn = psycopg2.connect("dbname='docker' \
-                                   user='docker' \
-                                   host='localhost' \
-                                   password='docker'")
-        if DBconn is not None:
-            print "running tests before DBconn.close()\n"
-            do_auth_tests()
-            DBconn.autocommit = True
-            cur = DBconn.cursor()
-            cur.execute(q)
-            rows = cur.fetchall()  
-            rb += "\nShow me the results:\n"
-            for row in rows:
-                rb += "   " + str(row[0]) + "<br>\n"
-                rb += str(row) + "<br>\n"
-            cur.close()
-            DBconn.close()
-            print "running tests after DBconn.close()\n"
-            do_auth_tests()
-        else:
-            rb = "DB Connection is None"
+        rb = lib.dao.query(q)
+        rb = str(rb)
     except Exception as e:
         rb = "Query Failed\n"
         rb += "Oops: %s\n" % e

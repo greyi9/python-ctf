@@ -2,6 +2,10 @@
 import lib.auth
 import base64
 import json
+import lib.auth
+import json
+import urllib
+
 
 VERBS_ACCEPTED = ['GET','POST']
 
@@ -38,26 +42,31 @@ def do_get(input, auth_data):
     return h + rb
 
 def do_post(input, auth_data):
-    rb = "Unknown"
+    rb = "uhh... what?"
+    j = json.loads(input)["input"]
+    input = urllib.unquote( j ).decode( 'utf8' )
     try:
-        j = json.loads(input)["input"]
         session = auth_data["session"]
         if session:
+            rb = "there's a session"
             user_id = None
             user_id = auth_data["id"]
             if user_id:
+                rb = "there's a session and a user id"
                 print "[*] authenticating as id=" + str(user_id)
             else:
-                user_id = lib.auth.get_user_from_session(session)
+                #user_id = str(lib.auth.get_user_from_session(session))
                 print "[*] tried to get user_id from session"
                 print "[*] user_id=" + str(user_id)
         else:
-            user_id = lib.auth.get_id_from_username(j)
+            rb = "there's no session"
+            #user_id = str(lib.auth.get_id_from_username(input))
             if user_id:
-                new_cookie=["session",base64.standar_encode("username:"+j),1,0,None]
-                auth_data["cookie_update"].append(new_cookie)
+                rb = "there's no session but there's a user id"
+                #new_cookie=["session",base64.standard_encode("username:"+str(input)),1,0,None]
+                #auth_data["cookie_update"].append(new_cookie)
     except Exception as e:
-        rb = "Oops: " + str(e)
+        rb = "Oopss: " + str(e)
     h = 'HTTP/1.1 200 OK\n'
     h += 'Content-Type: application/json;\n' 
     h += lib.auth.set_cookie_headers(auth_data)
