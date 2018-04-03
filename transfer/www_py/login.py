@@ -46,21 +46,23 @@ def do_post(input, auth_data):
     j = json.loads(input)["input"]
     input = urllib.unquote( j ).decode( 'utf8' )
     try:
-        session = auth_data["session"]
-        if session:
-            rb = "there's a session"
-            user_id = None
-            user_id = auth_data["id"]
-            if user_id:
-                rb = "there's a session and a user id"
-                print "[*] authenticating as id=" + str(user_id)
-            else:
-                print "[*] tried to get user_id from session"
-                try:
-                    user_id = lib.auth.get_user_from_session(session)
-                    print "[*] user_id=" + str(user_id)
-                except Exception as e:
-                    rb = rb + str(e)
+        if auth_data:
+            if auth_data["session"]:
+                session = auth_data["session"]
+                if session:
+                    rb = "there's a session"
+                    user_id = None
+                    user_id = auth_data["id"]
+                    if user_id:
+                        rb = "there's a session and a user id"
+                        print "[*] authenticating as id=" + str(user_id)
+                    else:
+                        print "[*] tried to get user_id from session"
+                        try:
+                            user_id = lib.auth.get_user_from_session(session)
+                            print "[*] user_id=" + str(user_id)
+                        except Exception as e:
+                            rb = rb + str(e)
         else:
             rb = "there's no session "
             try:
