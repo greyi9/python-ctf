@@ -55,16 +55,22 @@ def do_post(input, auth_data):
                 rb = "there's a session and a user id"
                 print "[*] authenticating as id=" + str(user_id)
             else:
-                #user_id = str(lib.auth.get_user_from_session(session))
                 print "[*] tried to get user_id from session"
-                print "[*] user_id=" + str(user_id)
+                try:
+                    user_id = lib.auth.get_user_from_session(session)
+                    print "[*] user_id=" + str(user_id)
+                except Exception as e:
+                    rb = rb + str(e)
         else:
-            rb = "there's no session"
-            #user_id = str(lib.auth.get_id_from_username(input))
-            if user_id:
-                rb = "there's no session but there's a user id"
-                #new_cookie=["session",base64.standard_encode("username:"+str(input)),1,0,None]
-                #auth_data["cookie_update"].append(new_cookie)
+            rb = "there's no session "
+            try:
+                user_id = lib.auth.get_id_from_username(str(input))
+                if user_id:
+                    rb = "there's no session but the username is in the db "
+                    new_cookie=["session",base64.standard_b64encode("username:"+str(input)),1,0,None]
+                    auth_data["cookie_update"].append(new_cookie)
+            except Exception as e:
+                rb = rb + str(e)
     except Exception as e:
         rb = "Oopss: " + str(e)
     h = 'HTTP/1.1 200 OK\n'

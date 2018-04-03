@@ -55,6 +55,7 @@ def process_cookies(cookies):
                     print str(auth_profile)
                     print "now need to parse this into the return value..."
                 else:
+                    print "[*] clearing session token on client"
                     new_cookie = ["session","",1,0,""]
                     cookie_update.append(new_cookie)
     return {"id":userid,"session":session_token,"cookie_update":cookie_update}
@@ -126,11 +127,11 @@ def check_session(session_token):
 
 def get_id_from_username(user_name):
     SQL = "SELECT ID FROM USERS WHERE NAME=(%s)"
-    data = user_name
+    data = str(user_name)
     print "[*] debugging... user_name: " + data
     print "[*] debugging... SQL: " + SQL
     debug = query(SQL,data)
-    print "[*] debugging... query result: " + debug
+    print "[*] debugging... query result: " + str(debug)
     return debug
 
 def check_username_exists(user_name):
