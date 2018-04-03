@@ -68,7 +68,7 @@ def set_cookie_headers(auth_data):
      h = ''
      if auth_data:
          print 4.01
-         if auth_data["cooke_update"]
+         if auth_data["cooke_update"]:
              print 4.02
              for cookie_update in auth_data["cookie_update"]:
                  print "[*] cookie update: " + str(cookie_update)
