@@ -7,21 +7,6 @@ import psycopg2
 import base64
 import dao
 
-def test1():
-    print "query('SELECT * FROM PUZZLES')" 
-    print query("SELECT * FROM PUZZLES")
-
-def test2():
-    print "generate_new_session_token()"
-    print generate_new_session_token()
-
-def test3():
-    print "is_session_token_in_db('abcdefg')"
-    print is_session_token_in_db('abcdefg')
-
-def test4():
-    session, debug = get_new_session(1)
-    print is_session_token_in_db(session)
 
 def query(SQL,data=None):
     try:
@@ -31,6 +16,7 @@ def query(SQL,data=None):
     return []
 
 def authenticate(user_name,hashofsecret):
+    print 1
     session_token = None
     user_id = None
     user_id = check_hash_match(user_name,hashofsecret)
@@ -39,6 +25,7 @@ def authenticate(user_name,hashofsecret):
     return user_id, session_token
 
 def process_cookies(cookies):
+    print 2
     userid = None
     session_token = ""
     cookie_update = []
@@ -61,6 +48,7 @@ def process_cookies(cookies):
     return {"id":userid,"session":session_token,"cookie_update":cookie_update}
 
 def get_user_from_session(token):
+    print 3
     ret_user = None
     try:
         user_name = base64.standard_decode(token)
@@ -76,6 +64,7 @@ def get_user_from_session(token):
 
 
 def set_cookie_headers(auth_data):
+     print 4
      h = ''
      if auth_data:
          for cookie_update in auth_data["cookie_update"]:
@@ -90,6 +79,7 @@ def set_cookie_headers(auth_data):
      return h
 
 def is_session_token_in_db(token):
+    print 5
     SQL = "SELECT COUNT(*) FROM SESSIONS WHERE TOKEN=(%s)"
     data = (token,)
     x = query(SQL,data)
@@ -98,6 +88,7 @@ def is_session_token_in_db(token):
     return False
 
 def generate_new_session_token():   
+    print 6
     import random
     x = str(int(random.random() * 1000000000))
     if is_session_token_in_db(x):
@@ -105,6 +96,7 @@ def generate_new_session_token():
     return x
     
 def get_session(token):
+    print 7
     SQL = "SELECT * FROM SESSIONS WHERE TOKEN=(%s)"
     data = (token,)
     x = query(SQL,data)
@@ -113,6 +105,7 @@ def get_session(token):
     return x
 
 def get_new_session(user_id):
+    print 8
     new_session = generate_new_session_token()
     SQL = "INSERT INTO SESSIONS (TOKEN, USER_ID) VALUES (%s,%s)"
     data = (new_session, user_id)
@@ -120,12 +113,14 @@ def get_new_session(user_id):
     return new_session,debug
 
 def check_session(session_token):
+    print 9
     SQL = "SELECT USER_ID FROM SESSIONS WHERE TOKEN=(%s)"
     data = session_token
     debug = query(SQL,data)
     print debug
 
 def get_id_from_username(user_name):
+    print 10
     SQL = "SELECT ID FROM USERS WHERE NAME=(%s)"
     data = str(user_name)
     print "[*] debugging... user_name: " + data
@@ -135,14 +130,15 @@ def get_id_from_username(user_name):
     return debug
 
 def check_username_exists(user_name):
+    print 11
     SQL = "SELECT COUNT(*) FROM USERS WHERE NAME=(%s)"
     data = user_name
     debug = query(SQL,data)
     return debug
 
 def check_hash_match(user_name,hashofsecret):
+    print 12
     SQL = "SELECT USER_ID FROM USERS WHERE NAME=(%s) AND PW_HASH=(%s)"
     debug = query(SQL,user_name,hashofsecret)
     return debug
-
 

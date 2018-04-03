@@ -23,7 +23,7 @@ def query(SQL,data=None):
             for row in rows:
                 debug_int = debug_int + 1
                 print "[**debug**] Query Result: \n %s " % str(row)
-                ret_rows.append(str(row))
+                ret_rows.append(str(row[0]))
                 print "[**debug**] row " + str(debug_int) + " value " + str(row) + "\n"
             cur.close
             DBconn.close
