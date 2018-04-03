@@ -67,15 +67,19 @@ def set_cookie_headers(auth_data):
      print 4
      h = ''
      if auth_data:
-         for cookie_update in auth_data["cookie_update"]:
-             h += 'Set-Cookie: ' + cookie_update[0] + "=" + cookie_update[1] + "; "
-             if cookie_update[2]:
-                 h += 'HttpOnly; '
-             if cookie_update[3]:
-                 h += 'Secure; '
-             if cookie_update[4]:
-                 h += 'Path=' + cookie_update[4] + ";"
-             h += '\n'
+         print 4.01
+         if auth_data["cooke_update"]
+             print 4.02
+             for cookie_update in auth_data["cookie_update"]:
+                 print "[*] cookie update: " + str(cookie_update)
+                 h += 'Set-Cookie: ' + cookie_update[0] + "=" + cookie_update[1] + "; "
+                 if cookie_update[2]:
+                     h += 'HttpOnly; '
+                 if cookie_update[3]:
+                     h += 'Secure; '
+                 if cookie_update[4]:
+                     h += 'Path=' + cookie_update[4] + ";"
+                 h += '\n'
      return h
 
 def is_session_token_in_db(token):
